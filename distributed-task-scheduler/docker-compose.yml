@@ -1,0 +1,32 @@
+services:
+  zookeeper:
+    image: zookeeper
+    container_name: zookeeper_node
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ZOO_TICK_TIME: 2000
+
+  mysql:
+    image: mysql
+    container_name: mysql_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=scheduler_db
+      - MYSQL_ROOT_PASSWORD=password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_broker
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  db_data: # This ensures your data survives even if you delete the container
